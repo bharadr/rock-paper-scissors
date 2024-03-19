@@ -31,9 +31,9 @@ function craftResult(playerChoice, computerSelection, result) {
         case 0:
             return `It is a tie. Both players chose ${playerChoice}.`
         case -1:
-            return `Computer wins. ${computerSelection} beats ${playerChoice}.`
+            return `Computer wins! ${computerSelection} beats ${playerChoice}.`
         default:
-            return `Player wins. ${playerChoice} beats ${computerSelection}.`
+            return `Player wins! ${playerChoice} beats ${computerSelection}.`
     }
 }
 
@@ -49,41 +49,53 @@ function craftFinalResult(playerScore, computerScore) {
 }
 
 
-function playGame() {
-    let playerScore = 0;
-    let computerScore = 0;
-    let round = 0;
+let playerScore = 0;
+let computerScore = 0;
+const buttons = document.querySelectorAll('.btn');
 
-    console.log("Let's play some rounds of Rock, Paper, Scissors. Best of 5!");
-    while (round < 5) {
-        let playerSelection = prompt('What do you choose?');
-        playerChoice = playerSelection.trim();
-        playerChoice = playerChoice.toLowerCase(); 
-        if (playerChoice !== ROCK && playerChoice !== PAPER && playerChoice !== SCISSORS) {
-            console.log('You failed failed to select a valid choice. Please enter either \'rock\', \'paper\', or \'scissors\'');
-            continue;
-        }    
-
-        let computerSelection = getComputerChoice();
-        let result = gameResult(playerChoice, computerSelection);
-        console.log(craftResult(playerChoice, computerSelection, result));
-
-        switch (result) {
-            case -1:
-                computerScore++;
-                break;
-            case 1:
-                playerScore++;
-                break;
-            default:
-                computerScore++;
-                playerScore++;
-        }
-        let scoreString = `Player Score: ${playerScore}, Computer Score: ${computerScore}`;
-        console.log(scoreString);
-        round++;
+function updateScoreString(result) {
+    switch (result) {
+        case -1:
+            computerScore++;
+            break;
+        case 1:
+            playerScore++;
+            break;
+        default:
     }
-    console.log(craftFinalResult(playerScore, computerScore));
+    return `Player Score: ${playerScore}, Computer Score: ${computerScore}`;
 }
 
-playGame()
+
+// Iterate through each button and add a click event listener
+buttons.forEach(button => {
+    button.addEventListener('click', function(e) {
+        // Play Game
+        let computerSelection = getComputerChoice();
+        let playerChoice = e.target.innerText.toLowerCase();
+        let result = gameResult(playerChoice, computerSelection);
+        // Update Result String
+        let resultTxt = craftResult(playerChoice, computerSelection, result);
+        let resultElem = document.querySelector('#result');
+        resultElem.innerText = resultTxt;
+        // Update Score String
+        let scoreString = updateScoreString(result);
+        let scoreElem = document.querySelector('#score');
+        scoreElem.innerText = scoreString;
+        // When game is over, display the final message and reset the game. 
+        if (playerScore >= 5 || computerScore >= 5) {
+            let finalResultStr = craftFinalResult(playerScore, computerScore);
+            let finalElem = document.querySelector('#final');
+            finalElem.innerText = finalResultStr;
+            playerScore = 0;
+            computerScore = 0;
+            scoreElem.innerText = 'Your Score: 0 Computer Score: 0';
+            resultElem.innerText = '';
+        }
+    });
+});
+
+
+
+
+
