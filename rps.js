@@ -83,14 +83,16 @@ buttons.forEach(button => {
         let scoreElem = document.querySelector('#score');
         scoreElem.innerText = scoreString;
         // When game is over, display the final message and reset the game. 
+        let finalElem = document.querySelector('#final');
         if (playerScore >= 5 || computerScore >= 5) {
             let finalResultStr = craftFinalResult(playerScore, computerScore);
-            let finalElem = document.querySelector('#final');
             finalElem.innerText = finalResultStr;
             playerScore = 0;
             computerScore = 0;
             scoreElem.innerText = 'Your Score: 0 Computer Score: 0';
             resultElem.innerText = '';
+        } else {
+            finalElem.innerText = '';
         }
     });
 });
